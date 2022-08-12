@@ -3,8 +3,8 @@ class Calculator {
   currentNumber = "";
   previousDisplay;
   currentDisplay;
-  operation = undefined;
-  result = undefined;
+  operation = null;
+  result = null;
   operationChar = "";
 
   constructor(curr, prev) {
@@ -23,7 +23,7 @@ class Calculator {
   clear() {
     this.previousNumber = "";
     this.currentNumber = "";
-    this.operation = undefined;
+    this.operation = null;
     this.updateDisplay();
   }
 
@@ -35,7 +35,7 @@ class Calculator {
   updateDisplay() {
     this.currentDisplay.innerText = this.getDisplayNumber(this.currentNumber);
 
-    if (this.operation != null) {
+    if (this.operation !== null) {
       this.previousDisplay.innerText = `${this.getDisplayNumber(
         this.previousNumber
       )} ${this.operationChar}`;
@@ -48,19 +48,19 @@ class Calculator {
     const strNum = number.toString();
     const intDigits = parseFloat(strNum.split(".")[0]);
     const decDigits = strNum.split(".")[1];
-    let intDisplay;
-    if (isNaN(intDigits)) {
-      intDisplay = "";
-    } else {
+    let intDisplay = "";
+
+    if (!isNaN(intDigits)) {
       intDisplay = intDigits.toLocaleString("en", {
         maximumFractionDigits: 0,
       });
     }
-    if (decDigits != null) {
+
+    if (typeof decDigits !== "undefined" && decDigits !== null) {
       return `${intDisplay}.${decDigits}`;
-    } else {
-      return intDisplay;
     }
+
+    return intDisplay;
   }
 
   appendNumber(number) {
@@ -82,10 +82,10 @@ class Calculator {
 
   compute() {
     const prev = parseFloat(this.previousNumber);
-    let curr = parseFloat(this.currentNumber);
+    const curr = parseFloat(this.currentNumber);
     if (isNaN(prev) || isNaN(curr)) return;
     this.currentNumber = this.operation(prev, curr);
-    this.operation = undefined;
+    this.operation = null;
     this.previousNumber = "";
     this.updateDisplay();
   }
@@ -119,15 +119,15 @@ function main() {
     });
   });
 
-  deleteButton.addEventListener("click", (e) => {
+  deleteButton.addEventListener("click", () => {
     calculator.delete();
   });
 
-  equalsButton.addEventListener("click", (e) => {
+  equalsButton.addEventListener("click", () => {
     calculator.compute();
   });
 
-  allClearButton.addEventListener("click", function () {
+  allClearButton.addEventListener("click", () => {
     calculator.clear();
   });
 
